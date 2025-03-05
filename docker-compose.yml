@@ -1,17 +1,12 @@
-version: "3.8"
-
 services:
   mysql:
-    image: mysql:5.7
+    image: mysql:
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: devops
-    volumes:
-      - ./mysql-data:/var/lib/mysql
-      - ./message.sql:/docker-entrypoint-initdb.d/message.sql  
+      MYSQL_DATABASE: devops  
     networks:
-      - twotier
+      - my-network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
       interval: 10s
@@ -33,7 +28,7 @@ services:
     depends_on:
       - mysql
     networks:
-      - twotier
+      - my-network
     restart: always
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:5000/health || exit 1"]
@@ -43,4 +38,4 @@ services:
       start_period: 30s
 
 networks:
-  twotier:
+  my-network:
